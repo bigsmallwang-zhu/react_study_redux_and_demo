@@ -1,33 +1,31 @@
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
-import PropTypes from 'prop-types'
 
 import CommentAdd from '../../components/comment-add/comment-add'
 import CommentList from '../../components/comment-list/comment-list'
-import { addComment, deleteComment,getComments } from '../../redux/actions'
 
 class App extends Component {
 
-   /*state = {
+  state = {
     comments: [
       { username: 'Tom', content: 'React挺好的' },
       { username: 'Jack', content: 'React挺难的' }
     ]
-  } */
-  
-  static propTypes = {
-    comments: PropTypes.array.isRequired,
-    addComment: PropTypes.func.isRequired,
-    deleteComment: PropTypes.func.isRequired,
-    getComments: PropTypes.func.isRequired
   }
 
-  componentDidMount(){
-    this.props.getComments();
+  addComment = (comment) => {
+    const { comments } = this.state
+    comments.unshift(comment)
+    this.setState({ comments })
+  }
+
+  deleteComment = (index) => {
+    const { comments } = this.state
+    comments.splice(index, 1)
+    this.setState(comments)
   }
 
   render() { 
-    const { comments, addComment, deleteComment } = this.props
+    const { comments } = this.state
     return ( 
       <div>
         <header className="site-header jumbotron">
@@ -40,15 +38,12 @@ class App extends Component {
           </div>
         </header>
         <div className="container">
-          <CommentAdd addComment={ addComment } />
-          <CommentList comments={ comments } deleteComment={ deleteComment} />
+          <CommentAdd addComment={ this.addComment } />
+          <CommentList comments={ comments } deleteComment={this.deleteComment} />
         </div>
       </div>
     );
   }
 }
  
-export default connect(
-  state => ({comments: state}),
-  {addComment, deleteComment, getComments}
-)(App);
+export default App;
